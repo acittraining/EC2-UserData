@@ -1,0 +1,105 @@
+==========================================EC2 User Data =============================================================
+
+#!/bin/bash
+yum update -y
+yum install -y httpd
+systemctl start httpd
+systemctl enable httpd
+echo "<h1>Hello World from $(hostname -f)</h1>" > /var/www/html/index.html
+
+=============================================EC2 Instance Types ======================================================
+https://instances.vantage.sh/
+
+calculator.aws
+
+
+========================================== Bootstrap Script =======================================================
+#!/bin/bash
+yum update -y
+yum install -y httpd
+systemctl start httpd.service
+systemctl enable httpd.service
+cd /var/www/html/
+echo "<html><body><h1>Welcome to AC-IT Training Solutions</h1></body></html>" > index.html 
+
+
+================================================ Bootstrap Script metadata ==========================================
+
+#!/bin/bash
+yum update -y
+yum install httpd -y
+systemctl start httpd
+systemctl enable httpd
+cd /var/www/html
+echo "<html><body><h1>My IP is" > index.html 
+TOKEN=$(curl -s -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+PUBLIC_IP=$(curl -s -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/public-ipv4)
+echo "$PUBLIC_IP" >> index.html
+echo "</h1></body></html>" >> index.html
+
+========================================= Webserver-01 Bootstrap script =============================================
+
+--> We will have to perform manual installation of apache2 server and mysql-server on webserver-01
+--> create a script to get meta-data of webserver-01
+
+touch install.sh
+vim install.sh 
+chmod +x install.sh 
+
+--> Run the script to get the userdata for webserver-01
+
+./install.sh 
+
+#!/bin/bash
+echo '<html><h1>Bootstrap Demo</h1><h3>Availability Zone: ' > /var/www/html/index.html 
+curl http://169.254.169.254/latest/meta-data/placement/availability-zone >> /var/www/html/index.html 
+echo '</h3> <h3>Instance Id: ' >> /var/www/html/index.html 
+curl http://169.254.169.254/latest/meta-data/instance-id >> /var/www/html/index.html 
+echo '</h3> <h3>Public IP: ' >> /var/www/html/index.html 
+curl http://169.254.169.254/latest/meta-data/public-ipv4 >> /var/www/html/index.html 
+echo '</h3> <h3>Local IP: ' >> /var/www/html/index.html 
+curl http://169.254.169.254/latest/meta-data/local-ipv4 >> /var/www/html/index.html 
+echo '</h3></html> ' >> /var/www/html/index.html
+
+
+==========================================  Webserver-02 Bootstrap Lab Session  =========================================
+
+Bootstrap script for webserver-02 lab session [You will have to troubleshoot why mysql is not running] 
+
+#!/bin/bash
+ sudo apt-get update -y
+ sudo apt-get install apache2 unzip -y
+ sudo systemctl enable apache2 
+ curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" 
+ unzip awscliv2.zip 
+ sudo ./aws/install 
+ echo '<html><h1>Bootstrap Demo</h1><h3>Availability Zone: ' > /var/www/html/index.html
+ curl http://169.254.169.254/latest/meta-data/placement/availability-zone >> /var/www/html/index.html echo '</h3> <h3>Instance Id: ' >> /var/www/html/index.html 
+ curl http://169.254.169.254/latest/meta-data/instance-id >> /var/www/html/index.html
+ echo '</h3> <h3>Public IP: ' >> /var/www/html/index.html 
+ curl http://169.254.169.254/latest/meta-data/public-ipv4 >> /var/www/html/index.html
+ echo '</h3> <h3>Local IP: ' >> /var/www/html/index.html
+ curl http://169.254.169.254/latest/meta-data/local-ipv4 >> /var/www/html/index.html
+ echo '</h3></html> ' >> /var/www/html/index.html
+ sudo apt-get install mysql-server 
+ sudo systemctl enable mysql
+ 
+ 
+ ============================================= Webserver-03 lab Bootstrap script =======================================
+ #!/bin/bash
+ sudo apt-get update -y
+ sudo apt-get install apache2 unzip -y
+ sudo systemctl enable apache2 
+ curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" 
+ unzip awscliv2.zip 
+ sudo ./aws/install 
+ echo '<html><h1>Bootstrap Demo</h1><h3>Availability Zone: ' > /var/www/html/index.html
+ curl http://169.254.169.254/latest/meta-data/placement/availability-zone >> /var/www/html/index.html echo '</h3> <h3>Instance Id: ' >> /var/www/html/index.html 
+ curl http://169.254.169.254/latest/meta-data/instance-id >> /var/www/html/index.html
+ echo '</h3> <h3>Public IP: ' >> /var/www/html/index.html 
+ curl http://169.254.169.254/latest/meta-data/public-ipv4 >> /var/www/html/index.html
+ echo '</h3> <h3>Local IP: ' >> /var/www/html/index.html
+ curl http://169.254.169.254/latest/meta-data/local-ipv4 >> /var/www/html/index.html
+ echo '</h3></html> ' >> /var/www/html/index.html
+ sudo apt-get install mysql-server -y
+ sudo systemctl enable mysql
