@@ -1,5 +1,9 @@
 ################################### Script to Install An Apache Server ###############################################
+==> create a file to install apache server
+touch installapache.sh
+vim installapache.sh
 
+====> copy and paste the codes below into your editor
 #!/bin/bash
 sudo yum update -y
 yum install httpd -y
